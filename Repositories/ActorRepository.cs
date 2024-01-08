@@ -54,8 +54,9 @@ public class ActorRepository(DatabaseContext databaseContext) : IActorRepository
 
     public async Task UpsertActorAsync(ActorModel actor)
     {
+        // Both of these can be a simple UNIQUE constraint on the database, but I'm skipping that for brevity.
         var existingActor = await _databaseContext.Actors.FirstOrDefaultAsync(
-            a => a.Id == actor.Id
+            a => a.Id == actor.Id || a.Rank == actor.Rank
         );
 
         if (existingActor is not null)
