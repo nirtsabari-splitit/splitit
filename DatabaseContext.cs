@@ -1,9 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-public class DatabaseContext : DbContext
+public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbContext(options)
 {
-    public DatabaseContext(DbContextOptions<DatabaseContext> options)
-        : base(options) { }
-
     public DbSet<Actor> Actors { get; set; }
 }
