@@ -1,3 +1,6 @@
+// We shouldn't be using the same class for both the Domain Model and the Database Model,
+// but for the sake of simplicity, we'll do it here.
+
 public class ActorModel
 {
     public string Id { get; set; }

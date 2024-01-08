@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ namespace SplitIt
 
             services.AddScoped<IActorScraper, ImdbActorScraper>();
             services.AddScoped<IActorRepository, ActorRepository>();
-
+            services.AddValidatorsFromAssemblyContaining<Startup>();
             services.AddHttpClient();
             services.AddControllers();
         }
