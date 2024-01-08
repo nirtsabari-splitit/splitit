@@ -1,5 +1,5 @@
 # Use the SDK image to build the project
-FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 COPY . .
 RUN dotnet restore
