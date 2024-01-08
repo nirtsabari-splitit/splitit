@@ -10,7 +10,7 @@ public class ImdbActorScraper(IHttpClientFactory httpClientFactory) : IActorScra
 {
     private readonly IHttpClientFactory httpClientFactory = httpClientFactory;
 
-    public async IAsyncEnumerable<Actor> ScrapeActorsAsync()
+    public async IAsyncEnumerable<ActorModel> ScrapeActorsAsync()
     {
         HtmlDocument document = await GetDocument();
 
@@ -18,7 +18,7 @@ public class ImdbActorScraper(IHttpClientFactory httpClientFactory) : IActorScra
 
         foreach (var item in listItems)
         {
-            var actor = new Actor();
+            var actor = new ActorModel();
 
             // Everything here may not exist / be nullable, we'll ignore that for brevity.
             var header = item.QuerySelector(".lister-item-header a");
