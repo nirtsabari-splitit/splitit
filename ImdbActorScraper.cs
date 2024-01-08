@@ -12,11 +12,7 @@ public class ImdbActorScraper(IHttpClientFactory httpClientFactory) : IActorScra
 
     public async IAsyncEnumerable<Actor> ScrapeActorsAsync()
     {
-        var html = await GetHtmlAsync();
-
-        var document = new HtmlDocument();
-
-        document.LoadHtml(html);
+        HtmlDocument document = await GetDocument();
 
         var listItems = document.DocumentNode.QuerySelectorAll(".lister-item.mode-detail");
 
@@ -41,6 +37,17 @@ public class ImdbActorScraper(IHttpClientFactory httpClientFactory) : IActorScra
 
             yield return actor;
         }
+    }
+
+    private async Task<HtmlDocument> GetDocument()
+    {
+        var html = await GetHtmlAsync();
+
+        var document = new HtmlDocument();
+
+        document.LoadHtml(html);
+
+        return document;
     }
 
     private async Task<string> GetHtmlAsync()
