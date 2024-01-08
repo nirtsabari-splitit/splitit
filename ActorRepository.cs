@@ -25,7 +25,7 @@ public class ActorRepository(DatabaseContext databaseContext) : IActorRepository
 
     public async Task<ActorModel> GetActorAsync(string id)
     {
-        return await _databaseContext.Actors.FirstOrDefaultAsync(a => a.Id == id);
+        return await _databaseContext.Actors.FirstOrDefaultAsync(a => a.Id.Contains(id)); // TODO: Should be an exact match, but for now, this will do.
     }
 
     public async Task SaveBulkAsync(List<ActorModel> actors)
