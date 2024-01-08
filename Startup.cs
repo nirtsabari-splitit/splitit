@@ -20,9 +20,12 @@ namespace SplitIt
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DatabaseContext>(
-                options => options.UseInMemoryDatabase("YourInMemoryDb")
+                options => options.UseInMemoryDatabase("splitit")
             );
 
+            services.AddSingleton<IActorScraper, ImdbActorScraper>();
+
+            services.AddHttpClient();
             services.AddControllers();
         }
 
