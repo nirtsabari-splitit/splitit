@@ -11,8 +11,6 @@ public class ImdbActorScraper(IHttpClientFactory httpClientFactory) : IActorScra
 {
     private readonly IHttpClientFactory httpClientFactory = httpClientFactory;
 
-    private static Regex idRegex = new Regex(@"\/name\/(?<id>nm\d+)\/.*");
-
     public async IAsyncEnumerable<ActorModel> ScrapeActorsAsync()
     {
         HtmlDocument document = await GetDocument();
