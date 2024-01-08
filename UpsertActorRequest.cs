@@ -1,4 +1,4 @@
-public class UpsertRequest
+public class UpsertActorRequest
 {
     public string Name { get; set; }
     public string Details { get; set; }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Fizzler.Systems.HtmlAgilityPack;
 using HtmlAgilityPack;
@@ -9,6 +10,8 @@ using HtmlAgilityPack;
 public class ImdbActorScraper(IHttpClientFactory httpClientFactory) : IActorScraper
 {
     private readonly IHttpClientFactory httpClientFactory = httpClientFactory;
+
+    private static Regex idRegex = new Regex(@"\/name\/(?<id>nm\d+)\/.*");
 
     public async IAsyncEnumerable<ActorModel> ScrapeActorsAsync()
     {

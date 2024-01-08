@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
+// TODO: Filtering, Pagination, Error Handling (Middleware), Validation (FluentValidation)
 namespace SplitIt.Controllers
 {
     [ApiController]
@@ -21,14 +21,18 @@ namespace SplitIt.Controllers
         }
 
         [HttpGet]
-        public async Task<ActorsResponse> GetActors()
+        public async Task<ActorsResponse> GetActors([FromQuery] GetActorsRequest request)
         {
-            var actors = await _actorRepository.GetActorsAsync();
+            var actors = await _actorRepository.GetActorsAsync(request);
+
+            var entries = actors
+                .Select(a => new ActorsResponseEntry { Id = a.Id, Name = a.Name })
+                .ToList();
 
             return new ActorsResponse
             {
                 IsSuccess = true,
-                Actors = actors,
+                Actors = entries,
                 Errors = [],
                 StatusCode = 200,
                 TraceId = Guid.NewGuid().ToString()
@@ -50,6 +54,68 @@ namespace SplitIt.Controllers
             };
         }
 
+        [HttpPost]
+        public async Task<Response> UpsertActor(UpsertActorRequest request)
+        {
+            var actor = new ActorModel
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = request.Name,
+                Details = request.Details,
+                Type = request.Type,
+                Rank = request.Rank,
+                Source = request.Source
+            };
+
+            await _actorRepository.UpsertActorAsync(actor);
+
+            return new Response
+            {
+                IsSuccess = true,
+                Errors = [],
+                StatusCode = 200,
+                TraceId = Guid.NewGuid().ToString()
+            };
+        }
+
+        [HttpPut("{id}")]
+        public async Task<Response> UpdateActor(string id, [FromBody] UpsertActorRequest request)
+        {
+            var actor = new ActorModel
+            {
+                Id = id,
+                Name = request.Name,
+                Details = request.Details,
+                Type = request.Type,
+                Rank = request.Rank,
+                Source = request.Source
+            };
+
+            await _actorRepository.UpsertActorAsync(actor);
+
+            return new Response
+            {
+                IsSuccess = true,
+                Errors = [],
+                StatusCode = 200,
+                TraceId = Guid.NewGuid().ToString()
+            };
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<Response> DeleteActor(string id)
+        {
+            await _actorRepository.DeleteActorAsync(id);
+
+            return new Response
+            {
+                IsSuccess = true,
+                Errors = [],
+                StatusCode = 200,
+                TraceId = Guid.NewGuid().ToString()
+            };
+        }
+
         [HttpGet("populate")]
         public async Task<Response> PopulateActors()
         {
@@ -58,7 +124,7 @@ namespace SplitIt.Controllers
             await foreach (var actor in _actorScraper.ScrapeActorsAsync())
                 actors.Add(actor);
 
-            await _actorRepository.SaveBulkAsync(actors);
+            await _actorRepository.SaveManyAsync(actors);
 
             return new Response
             {

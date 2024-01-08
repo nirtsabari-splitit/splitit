@@ -37,6 +37,8 @@ namespace SplitIt
 
             app.UseRouting();
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

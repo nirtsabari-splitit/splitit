@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,9 +7,25 @@ public class ActorRepository(DatabaseContext databaseContext) : IActorRepository
 {
     private DatabaseContext _databaseContext = databaseContext;
 
-    public Task<List<ActorModel>> GetActorsAsync()
+    public async Task<List<ActorModel>> GetActorsAsync(GetActorsRequest options)
     {
-        return _databaseContext.Actors.ToListAsync();
+        var query = _databaseContext.Actors.AsQueryable();
+
+        if (!string.IsNullOrEmpty(options.ActorName))
+            query = query.Where(actor => actor.Name.Contains(options.ActorName));
+
+        if (options.MinRank.HasValue)
+            query = query.Where(actor => actor.Rank >= options.MinRank.Value);
+
+        if (options.MaxRank.HasValue)
+            query = query.Where(actor => actor.Rank <= options.MaxRank.Value);
+
+        if (!string.IsNullOrEmpty(options.Provider))
+            query = query.Where(actor => actor.Source == options.Provider);
+
+        query = query.Skip(options.Skip).Take(options.Take);
+
+        return await query.ToListAsync();
     }
 
     public async Task DeleteActorAsync(string id)
@@ -28,7 +45,7 @@ public class ActorRepository(DatabaseContext databaseContext) : IActorRepository
         return await _databaseContext.Actors.FirstOrDefaultAsync(a => a.Id.Contains(id)); // TODO: Should be an exact match, but for now, this will do.
     }
 
-    public async Task SaveBulkAsync(List<ActorModel> actors)
+    public async Task SaveManyAsync(List<ActorModel> actors)
     {
         await _databaseContext.Actors.AddRangeAsync(actors);
 

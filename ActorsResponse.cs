@@ -1,6 +1,12 @@
 using System.Collections.Generic;
 
+public class ActorsResponseEntry
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+}
+
 public class ActorsResponse : Response
 {
-    public List<ActorModel> Actors { get; set; }
+    public List<ActorsResponseEntry> Actors { get; set; }
 }

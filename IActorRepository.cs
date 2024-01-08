@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 public interface IActorRepository
 {
-    Task<List<ActorModel>> GetActorsAsync();
+    Task<List<ActorModel>> GetActorsAsync(GetActorsRequest options); // TODO: Don't use the same type as the DTO
     Task<ActorModel> GetActorAsync(string id);
     Task UpsertActorAsync(ActorModel actor);
     Task DeleteActorAsync(string id);
-    Task SaveBulkAsync(List<ActorModel> actors);
+    Task SaveManyAsync(List<ActorModel> actors);
 }
