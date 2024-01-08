@@ -23,13 +23,12 @@ public class ImdbActorScraper(IHttpClientFactory httpClientFactory) : IActorScra
 
             // Everything here may not exist / be nullable, we'll ignore that for brevity.
             var header = item.QuerySelector(".lister-item-header a");
-            var id = header?.GetAttributeValue("href", null);
             var rank = item?.QuerySelector(".lister-item-index")?.InnerText?.TrimEnd(['.', ' ']);
             var name = header?.InnerText?.Trim();
             var description = item?.QuerySelector(".list-description")?.InnerText?.Trim();
             var type = item?.QuerySelector("p")?.GetDirectInnerText()?.Trim();
 
-            actor.Id = id;
+            actor.Id = Guid.NewGuid().ToString();
             actor.Rank = int.Parse(rank); // Should be a TryParse, but I'm skipping it for brevity.
             actor.Name = name;
             actor.Type = type;
