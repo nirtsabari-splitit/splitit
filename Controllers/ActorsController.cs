@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 // TODO: Validation (FluentValidation)
@@ -16,42 +17,22 @@ namespace SplitIt.Controllers
     {
         private readonly IActorScraper _actorScraper;
         private readonly IActorRepository _actorRepository;
-        private readonly IValidator<GetActorsRequest> _validator;
 
-        public ActorsController(
-            IActorScraper actorScraper,
-            IActorRepository actorRepository,
-            IValidator<GetActorsRequest> validator // FluentValidation integration no longer recommended, so manual it is
-        )
+        public ActorsController(IActorScraper actorScraper, IActorRepository actorRepository)
         {
             _actorScraper = actorScraper;
             _actorRepository = actorRepository;
-            _validator = validator;
         }
 
         [HttpGet]
-        public async Task<ActorsResponse> GetActors([FromQuery] GetActorsRequest request)
+        public async Task<Response> GetActors([FromQuery] GetActorsRequest request)
         {
-            var validationResult = _validator.Validate(request);
+            var validator = new GetActorsRequestValidator();
+
+            var validationResult = validator.Validate(request);
 
             if (!validationResult.IsValid)
-                return new ActorsResponse
-                {
-                    IsSuccess = false,
-                    Errors = validationResult
-                        .Errors.Select(
-                            e =>
-                                new Error
-                                {
-                                    Code = e.ErrorCode,
-                                    Message = e.ErrorMessage,
-                                    AdditionalInfo = e.ErrorMessage
-                                }
-                        )
-                        .ToList(),
-                    StatusCode = 400,
-                    TraceId = Guid.NewGuid().ToString()
-                };
+                return ValidationResultToResponse(validationResult);
 
             var actors = await _actorRepository.GetActorsAsync(request);
 
@@ -85,7 +66,7 @@ namespace SplitIt.Controllers
         }
 
         [HttpPost]
-        public async Task<Response> UpsertActor(UpsertActorRequest request)
+        public async Task<Response> AddActor(UpdateActorRequest request)
         {
             var actor = new ActorModel
             {
@@ -109,8 +90,15 @@ namespace SplitIt.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<Response> UpdateActor(string id, [FromBody] UpsertActorRequest request)
+        public async Task<Response> UpdateActor(string id, [FromBody] UpdateActorRequest request)
         {
+            var validator = new UpdateActorRequestValidator();
+
+            var validationResult = validator.Validate(request);
+
+            if (!validationResult.IsValid)
+                return ValidationResultToResponse(validationResult);
+
             var actor = new ActorModel
             {
                 Id = id,
@@ -161,6 +149,27 @@ namespace SplitIt.Controllers
                 IsSuccess = true,
                 Errors = [],
                 StatusCode = 200,
+                TraceId = Guid.NewGuid().ToString()
+            };
+        }
+
+        private static Response ValidationResultToResponse(ValidationResult validationResult)
+        {
+            return new Response
+            {
+                IsSuccess = false,
+                Errors = validationResult
+                    .Errors.Select(
+                        e =>
+                            new Error
+                            {
+                                Code = e.ErrorCode,
+                                Message = e.ErrorMessage,
+                                AdditionalInfo = e.ErrorMessage
+                            }
+                    )
+                    .ToList(),
+                StatusCode = 400,
                 TraceId = Guid.NewGuid().ToString()
             };
         }

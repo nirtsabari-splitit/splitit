@@ -72,12 +72,13 @@ public class ActorRepository(DatabaseContext databaseContext) : IActorRepository
     public async Task UpsertActorAsync(ActorModel actor)
     {
         // Both of these can be a simple UNIQUE constraint on the database, but I'm skipping that for brevity.
+        if (await _databaseContext.Actors.AnyAsync(a => a.Rank == actor.Rank)) // Unclear if it's unique per source / provider or not
+            throw new Exception("Actor with the same rank already exists");
+
         var existingActor = await _databaseContext
             .Actors.AsNoTracking()
             .FirstOrDefaultAsync(
-                a =>
-                    a.Id.Equals(actor.Id, StringComparison.InvariantCultureIgnoreCase)
-                    || a.Rank == actor.Rank
+                a => a.Id.Equals(actor.Id, StringComparison.InvariantCultureIgnoreCase)
             );
 
         if (existingActor is not null)
