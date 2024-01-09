@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,7 +43,9 @@ public class ActorRepository(DatabaseContext databaseContext) : IActorRepository
 
     public async Task<ActorModel> GetActorAsync(string id)
     {
-        return await _databaseContext.Actors.FirstOrDefaultAsync(a => a.Id.Contains(id)); // TODO: Should be an exact match, but for now, this will do.
+        return await _databaseContext.Actors.FirstOrDefaultAsync(
+            a => a.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase)
+        );
     }
 
     public async Task SaveManyAsync(List<ActorModel> actors)
