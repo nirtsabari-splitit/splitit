@@ -1,0 +1,187 @@
+{
+	"info": {
+		"_postman_id": "d0d24d30-5a7a-4c3c-96fd-80aff75c3304",
+		"name": "SplitIt",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32224706"
+	},
+	"item": [
+		{
+			"name": "Populate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/actors/populate",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"actors",
+						"populate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Actors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/actors?minRank=100",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"actors"
+					],
+					"query": [
+						{
+							"key": "actorName",
+							"value": "cha",
+							"disabled": true
+						},
+						{
+							"key": "maxRank",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "provider",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "skip",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "take",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "minRank",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Actor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\": \"Nir Tsabari\",\r\n    \"Details\": \"Pretty average guy\",\r\n    \"Type\": \"Software Engineer\",\r\n    \"Rank\": 999,\r\n    \"Source\": \"Mom\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/actors",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"actors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Actor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\": \"Nir Tsabari\",\r\n    \"Details\": \"Pretty average guy\",\r\n    \"Type\": \"Software Engineer\",\r\n    \"Rank\": 999,\r\n    \"Source\": \"Mom\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/actors",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"actors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Actor",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\": \"Nir Tsabari\",\r\n    \"Details\": \"Pretty average guy\",\r\n    \"Type\": \"Software Engineer\",\r\n    \"Rank\": 999,\r\n    \"Source\": \"Mom\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:5000/actors/09fbf120-8b79-47ae-95c9-3f4b894d14b7",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"actors",
+						"09fbf120-8b79-47ae-95c9-3f4b894d14b7"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "PORT",
+			"value": "5000",
+			"type": "string"
+		}
+	]
+}
