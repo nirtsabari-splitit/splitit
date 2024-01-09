@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
-// TODO: Validation (FluentValidation)
-// Ideally we would be using a service, wrapping the repository and the business logic
-// but since this is such a small / simple project, we'll just use the repository directly.
 namespace SplitIt.Controllers
 {
     [ApiController]
