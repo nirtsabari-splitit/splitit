@@ -34,7 +34,17 @@ namespace SplitIt.Controllers
             if (!validationResult.IsValid)
                 return ValidationResultToResponse(validationResult);
 
-            var actors = await _actorRepository.GetActorsAsync(request);
+            var actors = await _actorRepository.GetActorsAsync(
+                new GetActorsOptions
+                {
+                    ActorName = request.ActorName,
+                    MinRank = request.MinRank,
+                    MaxRank = request.MaxRank,
+                    Provider = request.Provider,
+                    Skip = request.Skip,
+                    Take = request.Take
+                }
+            );
 
             var entries = actors
                 .Select(a => new ActorsResponseEntry { Id = a.Id, Name = a.Name })
@@ -66,8 +76,15 @@ namespace SplitIt.Controllers
         }
 
         [HttpPost]
-        public async Task<Response> AddActor(UpdateActorRequest request)
+        public async Task<Response> AddActor(UpsertActorRequest request)
         {
+            var validator = new InsertActorRequestValidator();
+
+            var validationResult = validator.Validate(request);
+
+            if (!validationResult.IsValid)
+                return ValidationResultToResponse(validationResult);
+
             var actor = new ActorModel
             {
                 Id = Guid.NewGuid().ToString(),
@@ -90,7 +107,7 @@ namespace SplitIt.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<Response> UpdateActor(string id, [FromBody] UpdateActorRequest request)
+        public async Task<Response> UpdateActor(string id, [FromBody] UpsertActorRequest request)
         {
             var validator = new UpdateActorRequestValidator();
 

@@ -8,7 +8,7 @@ public class ActorRepository(DatabaseContext databaseContext) : IActorRepository
 {
     private DatabaseContext _databaseContext = databaseContext;
 
-    public async Task<List<ActorModel>> GetActorsAsync(GetActorsRequest options)
+    public async Task<List<ActorModel>> GetActorsAsync(GetActorsOptions options)
     {
         var query = _databaseContext.Actors.AsQueryable();
 

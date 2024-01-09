@@ -12,8 +12,6 @@ Also, bits to mention:
 
 Added a /actors/populate endpoint. Made it a GET for easy browser triggering. I know, I know, it's not the best REST practice. In a real app, I'd probably have it as a background task or something, but this was just simpler for now.
 
-Validation: I used FluentValidation. Didn’t integrate it with ASP.NET Core middleware because, apparently, that’s not the recommended way anymore. I just injected the validator directly. It's manageable for now, but for a bigger project, I'd probably need a different approach.
+Validation: I used FluentValidation. Didn’t integrate it with ASP.NET Core middleware because, apparently since the last time I've used .NET, it is not the recommended way anymore.
 
-TraceId: I didn't bother generating them per request so I just generated them randomly as a simplification.
-
-Similarly, I used the DTO request object in the repository option, this is again just a shortcut to not have to create another class. In a real app, I'd probably have a separate class for the repository options.
+TraceId: I didn't bother implementing (although it's fairly easy) them per request so I just generated them randomly as a simplification.
