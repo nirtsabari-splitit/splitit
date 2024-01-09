@@ -13,7 +13,13 @@ public class ActorRepository(DatabaseContext databaseContext) : IActorRepository
         var query = _databaseContext.Actors.AsQueryable();
 
         if (!string.IsNullOrEmpty(options.ActorName))
-            query = query.Where(actor => actor.Name.Contains(options.ActorName));
+            query = query.Where(
+                actor =>
+                    actor.Name.Contains(
+                        options.ActorName,
+                        StringComparison.InvariantCultureIgnoreCase
+                    )
+            );
 
         if (options.MinRank.HasValue)
             query = query.Where(actor => actor.Rank >= options.MinRank.Value);
@@ -22,7 +28,13 @@ public class ActorRepository(DatabaseContext databaseContext) : IActorRepository
             query = query.Where(actor => actor.Rank <= options.MaxRank.Value);
 
         if (!string.IsNullOrEmpty(options.Provider))
-            query = query.Where(actor => actor.Source == options.Provider);
+            query = query.Where(
+                actor =>
+                    actor.Source.Equals(
+                        options.Provider,
+                        StringComparison.InvariantCultureIgnoreCase
+                    )
+            );
 
         query = query.Skip(options.Skip).Take(options.Take);
 
@@ -31,7 +43,9 @@ public class ActorRepository(DatabaseContext databaseContext) : IActorRepository
 
     public async Task DeleteActorAsync(string id)
     {
-        var actor = await _databaseContext.Actors.FirstOrDefaultAsync(a => a.Id == id);
+        var actor = await _databaseContext.Actors.FirstOrDefaultAsync(
+            a => a.Id.Equals(id, StringComparison.InvariantCultureIgnoreCase)
+        );
 
         if (actor != null)
         {
@@ -59,7 +73,9 @@ public class ActorRepository(DatabaseContext databaseContext) : IActorRepository
     {
         // Both of these can be a simple UNIQUE constraint on the database, but I'm skipping that for brevity.
         var existingActor = await _databaseContext.Actors.FirstOrDefaultAsync(
-            a => a.Id == actor.Id || a.Rank == actor.Rank
+            a =>
+                a.Id.Equals(actor.Id, StringComparison.InvariantCultureIgnoreCase)
+                || a.Rank == actor.Rank
         );
 
         if (existingActor is not null)
